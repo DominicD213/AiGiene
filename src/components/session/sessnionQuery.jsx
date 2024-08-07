@@ -13,7 +13,7 @@ const SessionQuery = () => {
     useEffect(() => {
         const fetchQueries = async () => {
             try {
-                const response = await axios.get('/login/session-status/openAIResponse/responseQuery');
+                const response = await axios.get(`${process.env.CLIENTAPI}/login/session-status/openAIResponse/responseQuery`);
                 setQueries(response.data);
                 setLoading(false);
             } catch (error) {

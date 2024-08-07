@@ -15,7 +15,7 @@ const History = () => {
   useEffect(() => {
     const fetchQueries = async () => {
       try {
-        const response = await axios.get('/login/session-status/search/history', {
+        const response = await axios.get(`${process.env.CLIENTAPI}/login/session-status/search/history`, {
           params: { query: searchHistory }
         });
         setQueries(response.data); // Set the fetched queries to state

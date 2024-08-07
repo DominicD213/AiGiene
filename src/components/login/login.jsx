@@ -20,7 +20,7 @@ const Login = () => {
     const checkSessionStatus = async () => {
       try {
         console.log('Fetching session status...');
-        const response = await axios.get('/login/session-status', {
+        const response = await axios.get(`${process.env.CLIENTAPI}/login/session-status`, {
           withCredentials: true,
         });
 
@@ -76,7 +76,7 @@ const Login = () => {
     formData.append('file', file);
 
     try {
-        const response = await axios.post('/login/session-status/upload', formData, {
+        const response = await axios.post(`${process.env.CLIENTAPI}/login/session-status/upload`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },

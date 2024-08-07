@@ -12,7 +12,7 @@ const SignUpButton = ({ signUpState, loginState, newUsername, newPassword, newEm
       } else {
           try {
               setError('');
-              const response = await axios.post('/signup', {
+              const response = await axios.post(`${process.env.CLIENTAPI}/signup`, {
                   username,
                   email,
                   password,
