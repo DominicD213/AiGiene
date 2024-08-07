@@ -4,7 +4,7 @@ import Search from '../../Assets/whiteSearchIcon.png';
 import io from 'socket.io-client';
 
 // Initialize WebSocket connection
-const socket = io('http://localhost:4000');
+const socket = io('https://aigeiene-api.onrender.com');
 
 const History = () => {
   const [searchHistory, setSearchHistory] = useState(''); // State to hold search input
