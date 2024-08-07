@@ -48,7 +48,7 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
               <div className='relative ml-8 w-10/12 h-full bg-light-grey rounded-2xl'>
                 <div className='m-3'>
                   <p className='font-bold pt-1' style={{ color: 'white' }}>Login</p>
-                  <form>
+                  <form onSubmit={handleLogin}>
                     <input
                       className='flex max-w-36 h-full bg-light-grey outline-none px-2 text-white m-1'
                       type='text'
@@ -70,11 +70,11 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
                     <button
                       className="bg-custom-gradient rounded-lg px-4 py-2 w-20 absolute bottom-3 right-3"
                       type='submit'
-                      onClick={handleLogin}
                     >
                       Submit
                     </button>
                     <button
+                      type='button'
                       onClick={changeLoginState}
                       className='outline-none mb-2 ml-2'
                       style={{color:'red'}}
