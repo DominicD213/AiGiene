@@ -4,7 +4,7 @@ import Search from '../../Assets/whiteSearchIcon.png';
 import io from 'socket.io-client';
 
 // Initialize WebSocket connection
-const socket = io('https://aigeine-api.onrender.com');
+const socket = io(`${process.env.CLIENTAPI}`);
 
 const History = () => {
   const [searchHistory, setSearchHistory] = useState(''); // State to hold search input

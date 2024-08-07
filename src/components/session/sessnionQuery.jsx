@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://aigeine-api.onrender.com');
+const socket = io(`${process.env.CLIENTAPI}`);
 
 const SessionQuery = () => {
     const [queries, setQueries] = useState([]);
