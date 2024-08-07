@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import io from 'socket.io-client';
-
-const socket = io(`${process.env.CLIENTAPI}`);
+import socket from '../../socket';
 
 const SessionQuery = () => {
     const [queries, setQueries] = useState([]);

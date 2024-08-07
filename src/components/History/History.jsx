@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Search from '../../Assets/whiteSearchIcon.png';
-import io from 'socket.io-client';
+import socket from '../../socket';
 
-// Initialize WebSocket connection
-const socket = io(`${process.env.CLIENTAPI}`);
+
 
 const History = () => {
   const [searchHistory, setSearchHistory] = useState(''); // State to hold search input
