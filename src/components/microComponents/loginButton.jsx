@@ -29,6 +29,7 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
           if (response.status === 200) {
             const { user } = response.data;
             console.log('Login successful:', user); // Debug log
+            window.location.reload;
             changeLoginState();
           } else {
             setError(<p className='pr-2 pb-1 ' style={{ color: 'red' }}>Login failed</p>);
