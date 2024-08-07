@@ -16,7 +16,7 @@ const SearchBar = () => {
       setLoading(true); // Set loading state to true
 
       // Make API call to OpenAI endpoint
-      await axios.post(`${process.env.CLIENTAPI}/login/session-status/openAIResponse`, {
+      await axios.post(`https://aigeine-api.onrender.com/login/session-status/openAIResponse`, {
         query: searchTerm,
       });
 
