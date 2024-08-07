@@ -28,9 +28,6 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
     
           if (response.status === 200) {
             const { user } = response.data;
-            if(user.image){
-              setUserImage(user.image); // Set the user's image
-            };
             changeLoginState();
             window.location.reload();
           } else {
