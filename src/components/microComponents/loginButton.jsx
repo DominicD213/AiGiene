@@ -3,7 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPassword, changeLoginState,
-    loginUsername, loginPassword, setUserImage}) => {
+    loginUsername, loginPassword}) => {
     
       const [error, setError] = useState('');
 
@@ -19,7 +19,7 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
         setError('');
     
         try {
-          const response = await axios.post(`${process.env.CLIENTAPI}/login`, {
+          const response = await axios.post(`https://aigeine-api.onrender.com/login`, {
             username: loginUsername,
             password: loginPassword,
           }, {
@@ -28,6 +28,7 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
     
           if (response.status === 200) {
             const { user } = response.data;
+            console.log('Login successful:', user); // Debug log
             changeLoginState();
             window.location.reload();
           } else {
