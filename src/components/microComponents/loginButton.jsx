@@ -19,7 +19,7 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
         setError('');
     
         try {
-          const response = await axios.post('http://localhost:4000/login', {
+          const response = await axios.post('/login', {
             username: loginUsername,
             password: loginPassword,
           }, {

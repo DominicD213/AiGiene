@@ -12,7 +12,7 @@ const SignUpButton = ({ signUpState, loginState, newUsername, newPassword, newEm
       } else {
           try {
               setError('');
-              const response = await axios.post('http://localhost:4000/signup', {
+              const response = await axios.post('/signup', {
                   username,
                   email,
                   password,

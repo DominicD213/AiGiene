@@ -20,7 +20,7 @@ const Login = () => {
     const checkSessionStatus = async () => {
       try {
         console.log('Fetching session status...');
-        const response = await axios.get('http://localhost:4000/login/session-status', {
+        const response = await axios.get('/login/session-status', {
           withCredentials: true,
         });
 
@@ -44,7 +44,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/logout', {}, {
+      const response = await axios.post('/logout', {}, {
         withCredentials: true,
       });
 
@@ -76,7 +76,7 @@ const Login = () => {
     formData.append('file', file);
 
     try {
-        const response = await axios.post('http://localhost:4000/login/session-status/upload', formData, {
+        const response = await axios.post('/login/session-status/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
