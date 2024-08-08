@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchTerm, searchQuery } from '../actions/searchActions';
+import { setSearchTerm, searchQuery } from '../../actions/searchActions';
 
 const SearchBar = () => {
   const searchTerm = useSelector(state => state.search.searchTerm);
