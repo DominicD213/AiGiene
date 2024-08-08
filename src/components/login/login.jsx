@@ -9,7 +9,7 @@ import {
   setUserInfo,
   setSessionActive,
   setUserImage,
-} from '../../actions/authActions';
+} from '../../actions/loginActions';
 
 const Login = () => {
   const dispatch = useDispatch();
