@@ -1,9 +1,8 @@
-// components/LoginButton.js
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { login } from '../../actions/authActions';
 
-const LoginButton = ({ signUpState, loginState, loginUsername, loginPassword, newloginUsername, newloginPassword, changeLoginState, login, user, error, loading }) => {
+const LoginButton = ({ signUpState, loginState, loginUsername, loginPassword, newloginUsername, newloginPassword, changeLoginState, login, error, loading }) => {
   const [localError, setLocalError] = useState('');
 
   const handleLogin = async (e) => {
