@@ -1,4 +1,3 @@
-import personPlaceHolder from '../Assets/personPlaceHolder'
 
 import {
     SET_SIGNUP_STATE,
@@ -18,7 +17,7 @@ import {
     loginPassword: '',
     sessionActive: false,
     userImage: null,
-    imagePreview: {personPlaceHolder},
+    imagePreview: '../Assets/personPlaceHolder.png',
   };
   
   const loginReducer = (state = initialState, action) => {
