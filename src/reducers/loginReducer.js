@@ -1,38 +1,40 @@
-// Action Types
-export const SET_SIGNUP_STATE = 'SET_SIGNUP_STATE';
-export const SET_LOGIN_STATE = 'SET_LOGIN_STATE';
-export const SET_USER_INFO = 'SET_USER_INFO';
-export const SET_SESSION_ACTIVE = 'SET_SESSION_ACTIVE';
-export const SET_USER_IMAGE = 'SET_USER_IMAGE';
-export const SET_ERROR = 'SET_ERROR'; // Add this line
+// reducers/loginReducer.js
+import { SET_LOGIN_STATE, SET_SESSION_ACTIVE, SET_SIGNUP_STATE, SET_USER_IMAGE, SET_USER_INFO, SET_ERROR, SET_LOADING } from '../actions/authActions';
 
-// Action Creators
-export const setSignUpState = (signUpState) => ({
-  type: SET_SIGNUP_STATE,
-  payload: signUpState,
-});
+const initialState = {
+  signUpState: false,
+  loginState: false,
+  username: '',
+  password: '',
+  email: '',
+  loginUsername: '',
+  loginPassword: '',
+  sessionActive: false,
+  userImage: null,
+  imagePreview: '../Assets/personPlaceHolder.png',
+  error: '',
+  loading: false
+};
 
-export const setLoginState = (loginState) => ({
-  type: SET_LOGIN_STATE,
-  payload: loginState,
-});
+const loginReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case SET_SIGNUP_STATE:
+      return { ...state, signUpState: action.payload };
+    case SET_LOGIN_STATE:
+      return { ...state, loginState: action.payload };
+    case SET_USER_INFO:
+      return { ...state, ...action.payload };
+    case SET_SESSION_ACTIVE:
+      return { ...state, sessionActive: action.payload };
+    case SET_USER_IMAGE:
+      return { ...state, userImage: action.payload };
+    case SET_ERROR:
+      return { ...state, error: action.payload };
+    case SET_LOADING:
+      return { ...state, loading: action.payload };
+    default:
+      return state;
+  }
+};
 
-export const setUserInfo = (userInfo) => ({
-  type: SET_USER_INFO,
-  payload: userInfo,
-});
-
-export const setSessionActive = (sessionActive) => ({
-  type: SET_SESSION_ACTIVE,
-  payload: sessionActive,
-});
-
-export const setUserImage = (userImage) => ({
-  type: SET_USER_IMAGE,
-  payload: userImage,
-});
-
-export const setError = (error) => ({  // Add this action creator
-  type: SET_ERROR,
-  payload: error,
-});
+export default loginReducer;

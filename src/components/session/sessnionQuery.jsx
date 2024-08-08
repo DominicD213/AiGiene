@@ -5,7 +5,8 @@ import { fetchQueries, addQuery } from '../../actions/sessionQueryActions';
 
 const SessionQuery = () => {
   const dispatch = useDispatch();
-  const { queries, error, loading } = useSelector((state) => state.sessionQuery);
+  const queriesState = useSelector((state) => state.queries || {});
+  const { queries = [], error = null, loading = false } = queriesState;
   const queriesEndRef = useRef(null);
 
   useEffect(() => {

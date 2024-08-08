@@ -1,11 +1,15 @@
+// reducers/authReducer.js
 import {
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
   SET_SIGNUP_STATE,
   SET_LOGIN_STATE,
   SET_USER_INFO,
   SET_SESSION_ACTIVE,
   SET_USER_IMAGE,
   SET_ERROR,
-  SET_LOADING,
+  SET_LOADING
 } from '../actions/authActions';
 
 const initialState = {
@@ -19,12 +23,18 @@ const initialState = {
   sessionActive: false,
   userImage: null,
   imagePreview: '../Assets/personPlaceHolder.png',
-  error: null,
-  loading: false,
+  error: '',
+  loading: false
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOGIN_REQUEST:
+      return { ...state, loading: true };
+    case LOGIN_SUCCESS:
+      return { ...state, user: action.payload, loading: false, error: '' };
+    case LOGIN_FAILURE:
+      return { ...state, error: action.payload, loading: false };
     case SET_SIGNUP_STATE:
       return { ...state, signUpState: action.payload };
     case SET_LOGIN_STATE:

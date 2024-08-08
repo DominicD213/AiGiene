@@ -1,3 +1,4 @@
+// actions/authActions.js
 import axios from 'axios';
 
 // Action Types
@@ -9,10 +10,13 @@ export const SET_LOGIN_STATE = 'SET_LOGIN_STATE';
 export const SET_USER_INFO = 'SET_USER_INFO';
 export const SET_SESSION_ACTIVE = 'SET_SESSION_ACTIVE';
 export const SET_USER_IMAGE = 'SET_USER_IMAGE';
+export const SET_ERROR = 'SET_ERROR'; // Add this
+export const SET_LOADING = 'SET_LOADING'; // Add this
 
 // Action Creators
 export const login = (username, password) => async (dispatch) => {
   dispatch({ type: LOGIN_REQUEST });
+  dispatch({ type: SET_LOADING, payload: true }); // Set loading true
 
   try {
     const response = await axios.post('https://aigeine-api.onrender.com/login', {
@@ -30,6 +34,9 @@ export const login = (username, password) => async (dispatch) => {
     }
   } catch (error) {
     dispatch({ type: LOGIN_FAILURE, payload: 'Login failed' });
+    dispatch({ type: SET_ERROR, payload: 'Login failed' }); // Set error message
+  } finally {
+    dispatch({ type: SET_LOADING, payload: false }); // Set loading false
   }
 };
 
@@ -56,4 +63,14 @@ export const setSessionActive = (isActive) => ({
 export const setUserImage = (image) => ({
   type: SET_USER_IMAGE,
   payload: image,
+});
+
+export const setError = (error) => ({
+  type: SET_ERROR,
+  payload: error,
+});
+
+export const setLoading = (loading) => ({
+  type: SET_LOADING,
+  payload: loading,
 });

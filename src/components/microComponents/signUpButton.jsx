@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setSignUpState, setUserInfo, setError } from '../../actions/authActions';
+import { setSignUpState, setUserInfo, setError } from '../../actions/signUpAction';
 
 const SignUpButton = () => {
   const dispatch = useDispatch();
