@@ -1,51 +1,31 @@
+// components/LoginButton.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { login } from '../../actions/authActions';
 
-const LoginButton = ({
-  signUpState,
-  loginState,
-  newloginUsername,
-  newloginPassword,
-  changeLoginState,
-  loginUsername,
-  loginPassword
-}) => {
-  const [error, setError] = useState('');
+const LoginButton = ({ signUpState, loginState, loginUsername, loginPassword, newloginUsername, newloginPassword, changeLoginState, login, user, error, loading }) => {
+  const [localError, setLocalError] = useState('');
 
-  // Handling the login request
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Validate input
     if (!loginUsername || !loginPassword) {
-      setError('Fill out all login information');
+      setLocalError('Fill out all login information');
       return;
     }
 
-    setError('');
+    setLocalError('');
 
     try {
-      const response = await axios.post(
-        'https://aigeine-api.onrender.com/login',
-        {
-          username: loginUsername,
-          password: loginPassword
-        },
-        {
-          withCredentials: true
-        }
-      );
-
-      if (response.status === 200) {
-        const { user } = response.data;
-        console.log('Login successful:', user); // Debug log
+      await login(loginUsername, loginPassword);
+      if (!error) {
         changeLoginState();
       } else {
-        setError('Login failed');
+        setLocalError(error);
       }
     } catch (error) {
       console.error('Login Error:', error);
-      setError('Login failed');
+      setLocalError('Login failed');
     }
   };
 
@@ -84,6 +64,7 @@ const LoginButton = ({
                 <button
                   className='bg-custom-gradient rounded-lg px-4 py-2 w-20 absolute bottom-3 right-3'
                   type='submit'
+                  disabled={loading}
                 >
                   Submit
                 </button>
@@ -95,7 +76,12 @@ const LoginButton = ({
                 >
                   Cancel
                 </button>
-                {error && (
+                {localError && (
+                  <p className='pr-2 pb-1' style={{ color: 'red' }}>
+                    {localError}
+                  </p>
+                )}
+                {error && !localError && (
                   <p className='pr-2 pb-1' style={{ color: 'red' }}>
                     {error}
                   </p>
@@ -109,4 +95,14 @@ const LoginButton = ({
   );
 };
 
-export default LoginButton;
+const mapStateToProps = (state) => ({
+  error: state.auth.error,
+  loading: state.auth.loading,
+  user: state.auth.user,
+});
+
+const mapDispatchToProps = {
+  login,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginButton);
