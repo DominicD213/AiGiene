@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import socket from '../../socket';
-import { fetchQueries, addQuery } from '../actions/sessionQueryActions';
+import { fetchQueries, addQuery } from '../../actions/sessionQueryActions';
 
 const SessionQuery = () => {
   const dispatch = useDispatch();
