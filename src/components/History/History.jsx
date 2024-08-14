@@ -1,24 +1,24 @@
-import React, { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Search from '../../Assets/whiteSearchIcon.png';
-import socket from '../../socket';
-import { setSearchHistory, setQueries } from '../../actions/historyActions';
+import io from 'socket.io-client';
+
+// Initialize WebSocket connection
+const socket = io('https://aigeine-api.onrender.com');
 
 const History = () => {
-  const searchHistory = useSelector(state => state.history.searchHistory);
-  const queries = useSelector(state => state.history.queries);
-  const dispatch = useDispatch();
+  const [searchHistory, setSearchHistory] = useState(''); // State to hold search input
+  const [queries, setQueries] = useState([]); // State to hold the list of queries
   const queriesEndRef = useRef(null); // Reference to the end of the queries list for scrolling
 
   // Fetch queries when searchHistory changes
   useEffect(() => {
     const fetchQueries = async () => {
       try {
-        const response = await axios.get(`https://aigeine-api.onrender.com/login/session-status/search/history`, {
+        const response = await axios.get('https://aigeine-api.onrender.com/login/session-status/search/history', {
           params: { query: searchHistory }
         });
-        dispatch(setQueries(response.data)); // Update Redux state with fetched queries
+        setQueries(response.data); // Set the fetched queries to state
       } catch (error) {
         console.error('Error fetching search history:', error); // Log any errors
       }
@@ -27,20 +27,18 @@ const History = () => {
     if (searchHistory) {
       fetchQueries(); // Fetch queries if searchHistory is not empty
     }
-  }, [searchHistory, dispatch]);
+  }, [searchHistory]);
 
   // Listen for new queries via WebSocket
   useEffect(() => {
-    const handleNewQuery = (newQuery) => {
-      dispatch(setQueries((prevQueries) => [...prevQueries, newQuery])); // Add new query to the list in Redux state
-    };
-
-    socket.on('newQuery', handleNewQuery);
+    socket.on('newQuery', (newQuery) => {
+      setQueries((prevQueries) => [...prevQueries, newQuery]); // Add new query to the list
+    });
 
     return () => {
-      socket.off('newQuery', handleNewQuery); // Clean up the socket event listener
+      socket.off('newQuery'); // Clean up the socket event listener
     };
-  }, [dispatch]);
+  }, []);
 
   // Scroll to the end of the queries list when queries state changes
   useEffect(() => {
@@ -51,13 +49,13 @@ const History = () => {
 
   // Handle search input change
   const handleSearchHistoryChange = (e) => {
-    dispatch(setSearchHistory(e.target.value)); // Update searchHistory state in Redux
+    setSearchHistory(e.target.value); // Update searchHistory state with input value
   };
 
   // Handle form submission
   const handleFormSubmit = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-    dispatch(setSearchHistory(searchHistory)); // Trigger search with current input value
+    setSearchHistory(searchHistory); // Trigger search with current input value
   };
 
   return (
@@ -80,28 +78,27 @@ const History = () => {
           </div>
         </form>
         <div className="space-y-4 flex flex-col mx-5 mt-10 rounded overflow-auto max-h-[50vh]">
-          {searchHistory !== '' ? (
-            queries.map((item, i) => (
-              <div key={i} className="space-y-4">
-                <div className="animate-fade-right">
-                  <div className="flex justify-end">
-                    <div className="ml-8 max-w-xs p-4 bg-custom-gradient rounded-lg">
-                      <h2 className="text-lg font-bold">Query:</h2>
-                      <p>{item.query}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="flex justify-start">
-                    <div className="mr-8 lg:[w-lg] max-lg:[w-auto] p-4 bg-custom-text-gradient rounded-lg">
-                      <h2 className="text-lg font-bold">Response:</h2>
-                      <p>{item.response}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : null}
+                  {searchHistory !== '' ?(
+                    queries.map((item, i) => (
+                       <div key={i} className="space-y-4">
+                       <div className="animate-fade-right">
+                           <div className="flex justify-end">
+                               <div className="ml-8 max-w-xs p-4 bg-custom-gradient rounded-lg">
+                                   <h2 className="text-lg font-bold">Query:</h2>
+                                   <p>{item.query}</p>
+                               </div>
+                           </div>
+                       </div>
+                       <div className="">
+                           <div className="flex justify-start">
+                               <div className="mr-8 lg:[w-lg] max-lg:[w-auto] p-4 bg-custom-text-gradient rounded-lg">
+                                   <h2 className="text-lg font-bold">Response:</h2>
+                                   <p>{item.response}</p>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                    ))) : null}
           <div ref={queriesEndRef} /> {/* Reference to scroll to the end of the queries list */}
         </div>
       </div>

@@ -4,7 +4,7 @@ import logo from '../../Assets/AIlogo.png'
 const Header = () => {
   return (
     <div>
-        <div class = 'flex items-center ml-8 my-4'> 
+        <div className = 'flex items-center ml-8 my-4'> 
             <img className='w-10 h-10' src={logo}  alt='ai'/>
             <h1 className='text-2xl' style={{ color: 'white' }}>Giene</h1>
         </div>

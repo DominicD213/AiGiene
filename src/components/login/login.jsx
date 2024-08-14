@@ -1,46 +1,38 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import IconPerson from '../../Assets/personPlaceHolder.png';
 import SignUpButton from '../microComponents/signUpButton';
 import LoginButton from '../microComponents/loginButton';
-import {
-  setSignUpState,
-  setLoginState,
-  setUserInfo,
-  setSessionActive,
-  setUserImage,
-} from '../../actions/loginActions';
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const {
-    signUpState,
-    loginState,
-    username,
-    password,
-    email,
-    loginUsername,
-    loginPassword,
-    sessionActive,
-    userImage,
-    imagePreview,
-  } = useSelector((state) => state.auth);
+  const [signUpState, setSignUpState] = useState(false);
+  const [loginState, setLoginState] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [sessionActive, setSessionActive] = useState(false);
+  const [userImage, setUserImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(IconPerson);
 
+  // Check session status on component mount
   useEffect(() => {
     const checkSessionStatus = async () => {
       try {
         console.log('Fetching session status...');
-        const response = await axios.get(`https://aigeine-api.onrender.com/login/session-status`, {
+        const response = await axios.get('https://aigeine-api.onrender.com/login/session-status', {
           withCredentials: true,
         });
 
         console.log('Session status data:', response.data);
 
         if (response.data && response.data.active) {
-          dispatch(setSessionActive(true));
-          dispatch(setUserInfo({ loginUsername: response.data.user.username }));
+          setSessionActive(true);
+          setLoginUsername(response.data.user.username);
+          setUserImage(response.data.user.image || IconPerson); // Set user image if available
         } else {
-          dispatch(setSessionActive(false));
+          setSessionActive(false);
         }
       } catch (error) {
         console.error('Error checking session status:', error);
@@ -48,21 +40,22 @@ const Login = () => {
     };
 
     checkSessionStatus();
-  }, [dispatch]);
+  }, []);
 
+  // Handle logout
   const handleLogout = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`https://aigeine-api.onrender.com/logout`, {}, {
+      const response = await axios.post('https://aigeine-api.onrender.com/logout', {}, {
         withCredentials: true,
       });
 
       if (response.status === 200) {
         console.log('Session logged out');
-        dispatch(setSessionActive(false));
-        dispatch(setUserInfo({ loginUsername: '' }));
-        window.location.reload();
+        setSessionActive(false);
+        setLoginUsername('');
+        setUserImage(null); // Clear user image on logout
       } else {
         console.error('Logout failed');
       }
@@ -71,6 +64,7 @@ const Login = () => {
     }
   };
 
+  // Handle image upload
   const handleImageUpload = async (file) => {
     if (!sessionActive) {
       console.error('User is not logged in');
@@ -86,7 +80,7 @@ const Login = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post(`https://aigeine-api.onrender.com/login/session-status/upload`, formData, {
+      const response = await axios.post('https://aigeine-api.onrender.com/login/session-status/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -95,7 +89,7 @@ const Login = () => {
 
       if (response.status === 201) {
         console.log('Image uploaded');
-        dispatch(setUserImage(URL.createObjectURL(file)));
+        setImagePreview(URL.createObjectURL(file));
       } else {
         console.error('Image upload failed');
       }
@@ -104,13 +98,23 @@ const Login = () => {
     }
   };
 
+  // Toggle between sign up and login
+  const toggleSignUpState = () => {
+    setSignUpState(!signUpState);
+  };
+
+  const toggleLoginState = () => {
+    setLoginState(!loginState);
+  };
+
+  // Handle image change
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      dispatch(setUserImage(file));
-      dispatch(setUserImage(URL.createObjectURL(file)));
-
-      // Ensure the user image is uploaded automatically
+      setUserImage(file);
+      setImagePreview(URL.createObjectURL(file));
+      
+      // Automatically upload the image
       await handleImageUpload(file);
     }
   };
@@ -123,8 +127,8 @@ const Login = () => {
             <p className="text-center text-light-grey border-t border-light-grey mx-4"></p><br />
           </div>
           <div className="w-max m-auto rounded-2xl h-10 flex">
-            <button className="bg-custom-gradient rounded-lg px-4 w-20 max-lg:py-2 max-sm:w-[20vw]" onClick={() => dispatch(setLoginState(true))}>Login</button>
-            <button className="bg-custom-gradient rounded-lg ml-2 px-4 w-20 max-lg:py-2 max-sm:w-[20vw]" onClick={() => dispatch(setSignUpState(true))}>SignUp</button>
+            <button className="bg-custom-gradient rounded-lg px-4 w-20 max-lg:py-2 max-sm:w-[20vw]" onClick={toggleLoginState}>Login</button>
+            <button className="bg-custom-gradient rounded-lg ml-2 px-4 w-20 max-lg:py-2 max-sm:w-[20vw]" onClick={toggleSignUpState}>SignUp</button>
           </div>
         </>
       )}
@@ -133,10 +137,10 @@ const Login = () => {
         <SignUpButton
           signUpState={signUpState}
           loginState={loginState}
-          newUsername={(value) => dispatch(setUserInfo({ username: value }))}
-          newPassword={(value) => dispatch(setUserInfo({ password: value }))}
-          newEmail={(value) => dispatch(setUserInfo({ email: value }))}
-          changeSignUpstate={() => dispatch(setSignUpState(false))}
+          newUsername={setUsername}
+          newPassword={setPassword}
+          newEmail={setEmail}
+          changeSignUpstate={toggleSignUpState}
           username={username}
           password={password}
           email={email}
@@ -147,22 +151,23 @@ const Login = () => {
         <LoginButton
           signUpState={signUpState}
           loginState={loginState}
-          newloginUsername={(value) => dispatch(setUserInfo({ loginUsername: value }))}
-          newloginPassword={(value) => dispatch(setUserInfo({ loginPassword: value }))}
-          changeLoginState={() => dispatch(setLoginState(false))}
+          newloginUsername={setLoginUsername}
+          newloginPassword={setLoginPassword}
+          changeLoginState={toggleLoginState}
           loginUsername={loginUsername}
           loginPassword={loginPassword}
-          setUserImage={(image) => dispatch(setUserImage(image))}
+          setUserImage={setUserImage}
+          setSessionActive ={setSessionActive}
         />
       )}
-
+      
       {sessionActive && (
         <>
           <div className='rounded-2xl h-10 mx-5 flex items-center max-h-10'>
             <div className='bg-light-grey rounded-2xl'>
               <img
                 className="rounded-2xl h-10 w-10 cursor-pointer"
-                src={userImage ? userImage : imagePreview}
+                src={userImage ? URL.createObjectURL(userImage) : imagePreview}
                 alt="person"
                 onClick={() => document.getElementById('imageInput').click()}
               />
@@ -175,7 +180,7 @@ const Login = () => {
               />
             </div>
             <p className='ml-2 w-4/6 px-5' style={{ color: 'white' }}>Welcome, {loginUsername}!</p>
-            <button style={{ color: 'red' }} className="outline-none rounded-lg" onClick={handleLogout}>LogOut</button>
+            <button style={{color:'red'}} className="outline-none rounded-lg" onClick={handleLogout}>LogOut</button>
           </div>
         </>
       )}
